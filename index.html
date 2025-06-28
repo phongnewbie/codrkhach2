@@ -51,6 +51,20 @@
       button:hover {
         background: #1a3e99;
       }
+      .copy-btn {
+        background: #28a745;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 12px;
+        transition: background 0.2s;
+      }
+      .copy-btn:hover {
+        background: #1e7e34;
+      }
       .result {
         margin-top: 16px;
       }
@@ -59,6 +73,8 @@
         font-weight: bold;
         margin-bottom: 12px;
         color: #2d5be3;
+        display: flex;
+        align-items: center;
       }
       .pairs-row {
         display: flex;
@@ -103,7 +119,7 @@
       function generateAllPairs() {
         const pairs = [];
         for (let i = 0; i <= 99; i++) {
-          for (let j = i; j <= 99; j++) {
+          for (let j = i + 1; j <= 99; j++) {
             const a = i.toString().padStart(2, "0");
             const b = j.toString().padStart(2, "0");
             pairs.push(`${a},${b}`);
@@ -150,6 +166,14 @@
         const countDiv = document.createElement("div");
         countDiv.className = "count";
         countDiv.textContent = `Tổng số cặp còn lại: ${pairs.length}`;
+
+        // Thêm nút copy
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "copy-btn";
+        copyBtn.textContent = "Copy kết quả";
+        copyBtn.onclick = () => copyResults(pairs);
+        countDiv.appendChild(copyBtn);
+
         resultDiv.appendChild(countDiv);
         // Hiển thị các cặp, 50 cặp 1 hàng
         for (let i = 0; i < pairs.length; i += 50) {
@@ -159,11 +183,30 @@
           for (const pair of rowPairs) {
             const pairDiv = document.createElement("div");
             pairDiv.className = "pair";
-            pairDiv.textContent = pair.replace(",", " - ");
+            pairDiv.textContent = pair.replace(",", ", ");
             rowDiv.appendChild(pairDiv);
           }
           resultDiv.appendChild(rowDiv);
         }
+      }
+
+      function copyResults(pairs) {
+        const textToCopy = pairs.join(", ");
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            alert("Đã copy kết quả vào clipboard!");
+          })
+          .catch(() => {
+            // Fallback cho trình duyệt cũ
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+            alert("Đã copy kết quả vào clipboard!");
+          });
       }
     </script>
   </body>
