@@ -65,6 +65,20 @@
       .copy-btn:hover {
         background: #1e7e34;
       }
+      .row-copy-btn {
+        background: #6c757d;
+        color: #fff;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-left: 8px;
+        transition: background 0.2s;
+      }
+      .row-copy-btn:hover {
+        background: #545b62;
+      }
       .hidden-textarea {
         position: absolute;
         left: -9999px;
@@ -80,8 +94,6 @@
         font-weight: bold;
         margin-bottom: 12px;
         color: #2d5be3;
-        display: flex;
-        align-items: center;
       }
       .pairs-row {
         display: flex;
@@ -176,20 +188,21 @@
         const countDiv = document.createElement("div");
         countDiv.className = "count";
         countDiv.textContent = `Tổng số cặp còn lại: ${pairs.length}`;
-
-        // Thêm nút copy
-        const copyBtn = document.createElement("button");
-        copyBtn.className = "copy-btn";
-        copyBtn.textContent = "Copy kết quả";
-        copyBtn.onclick = () => copyResults(pairs);
-        countDiv.appendChild(copyBtn);
-
         resultDiv.appendChild(countDiv);
+
         // Hiển thị các cặp, 50 cặp 1 hàng
         for (let i = 0; i < pairs.length; i += 50) {
           const rowDiv = document.createElement("div");
           rowDiv.className = "pairs-row";
           const rowPairs = pairs.slice(i, i + 50);
+
+          // Thêm nút copy cho hàng này
+          const copyBtn = document.createElement("button");
+          copyBtn.className = "row-copy-btn";
+          copyBtn.textContent = "Copy";
+          copyBtn.onclick = () => copyRow(rowPairs);
+          rowDiv.appendChild(copyBtn);
+
           for (const pair of rowPairs) {
             const pairDiv = document.createElement("span");
             pairDiv.className = "pair";
@@ -200,13 +213,13 @@
         }
       }
 
-      function copyResults(pairs) {
-        const textToCopy = pairs.join(" ");
+      function copyRow(rowPairs) {
+        const textToCopy = rowPairs.join(" ");
         const hiddenTextarea = document.getElementById("hiddenTextarea");
         hiddenTextarea.value = textToCopy;
         hiddenTextarea.select();
         document.execCommand("copy");
-        alert("Đã copy kết quả vào clipboard!");
+        alert("Đã copy hàng này vào clipboard!");
       }
     </script>
   </body>
